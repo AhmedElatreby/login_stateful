@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import '../mixin/Validation_Mixin.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,9 +11,12 @@ class LoginScreen extends StatefulWidget {
   }
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> with ValidationMixin {
   final formKey = GlobalKey<FormState>();
+  String email = '';
+  String password = '';
 
+  @override
   Widget build(context) {
     return Container(
       margin: const EdgeInsets.all(20.0),
@@ -22,7 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
             emailField(),
             passwordField(),
             Container(
-              margin: EdgeInsets.only(top: 25.0),
+              margin: const EdgeInsets.only(top: 25.0),
             ),
             submitButton(),
           ],
@@ -34,51 +39,49 @@ class LoginScreenState extends State<LoginScreen> {
   Widget emailField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         icon: Icon(Icons.email),
         labelText: 'Email Address',
         hintText: 'you@example.com',
       ),
-      validator: emailValidation,
+      validator: emailValidator,
+      onSaved: (String? value) {
+        email = value!;
+      },
     );
   }
 
   Widget passwordField() {
     return TextFormField(
       obscureText: true,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         icon: Icon(Icons.password),
         labelText: 'Password',
         hintText: 'Password',
       ),
       validator: passwordValidation,
+      onSaved: (String? value) {
+        password = value!;
+      },
     );
   }
 
   Widget submitButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(10.0),
-        primary: Colors.lightBlue,
-        onPrimary: Colors.black45,
+        foregroundColor: Colors.black45,
+        backgroundColor: Colors.lightBlue,
+        padding: const EdgeInsets.all(10.0),
       ),
-      child: Text('Submit!'),
+      child: const Text('Submit!'),
       onPressed: () {
-        print(formKey.currentState?.validate());
+        if (formKey.currentState!.validate()) {
+          formKey.currentState?.save();
+          print('Time to post $email and $password to my API!');
+        }
       },
     );
   }
 
-  String? emailValidation(value) {
-    if (!value!.contains('@')) {
-      return 'Please Enter a valid email';
-    }
-    return null;
-  }
 
-  String? passwordValidation(value) {
-    if (value!.length < 4) {
-      return 'Password must be at least 4 characters';
-    }
-  }
 }
