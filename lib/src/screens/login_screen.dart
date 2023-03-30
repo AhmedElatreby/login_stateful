@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import '../mixin/Validation_Mixin.dart';
 import 'package:flutter/material.dart';
 
@@ -77,11 +78,11 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
       onPressed: () {
         if (formKey.currentState!.validate()) {
           formKey.currentState?.save();
-          print('Time to post $email and $password to my API!');
+          if (kDebugMode) {
+            print('Time to post $email and $password to my API!');
+          }
         }
       },
     );
   }
-
-
 }

@@ -3,6 +3,7 @@ class ValidationMixin {
     if (!value!.contains('@')) {
       return 'Please Enter a valid email';
     }
+    return null;
 
   }
 
